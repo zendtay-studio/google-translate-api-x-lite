@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const T = require('./translator'), ISO = require('./iso'), { version: v } = require('./package.json');
+const T = require('./index'), ISO = require('./iso'), { version: v } = require('./package.json');
 const args = process.argv.slice(2), i = (s, l) => Math.max(args.indexOf(s), args.indexOf(l));
 
 // Retornos tempranos para comandos de 1 solo paso (mata la ejecución sin process.exit)
