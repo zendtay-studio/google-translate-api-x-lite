@@ -1,0 +1,45 @@
+{
+  "name": "google-translate-api-x-lite",
+  "version": "1.0.0",
+  "description": "Lightweight Google Translate API wrapper with ISO language mapping. Zero dependencies, uses native fetch.",
+  "keywords": [
+    "google-translate",
+    "translate",
+    "translation",
+    "google-translate-api",
+    "language-translation",
+    "translator",
+    "iso-639",
+    "language-detection",
+    "detect-language",
+    "api-wrapper",
+    "lightweight",
+    "fetch",
+    "fastld-js",
+    "nodejs",
+    "javascript"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "ZendTay Studio",
+    "email": "zendtaystudio@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zendtay-studio/google-translate-api-x-lite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zendtay-studio/google-translate-api-x-lite/issues"
+  },
+  "homepage": "https://github.com/zendtay-studio/google-translate-api-x-lite#readme",
+  "bin": {
+    "google-translate-api-x-lite": "./cli.js"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "cli": "node cli.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
