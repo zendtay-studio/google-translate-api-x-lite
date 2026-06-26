@@ -1,6 +1,6 @@
 {
   "name": "google-translate-api-x-lite",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lightweight Google Translate API wrapper with ISO language mapping. Zero dependencies, uses native fetch.",
   "keywords": [
     "google-translate",
