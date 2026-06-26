@@ -1,26 +1,80 @@
 #!/usr/bin/env node
 
-const T = require('./index'), ISO = require('./iso'), { version: v } = require('./package.json');
-const args = process.argv.slice(2), i = (s, l) => Math.max(args.indexOf(s), args.indexOf(l));
+const { translate, detect, langs, info, CONFIG } = require('./index');
+const { version: v } = require('./package.json');
 
-// Retornos tempranos para comandos de 1 solo paso (mata la ejecución sin process.exit)
-if (i('-h', '--help') > -1 || !args.length) return console.log(`v${v}\nUsage: -v, -h, -l, -d <text>, -t <f> <t> <text>`);
-if (i('-v', '--version') > -1) return console.log(v);
-if (i('-l', '--list') > -1) return Object.entries(ISO).forEach(([c, d]) => console.log(`${c}: ${d.name}`));
+const args = process.argv.slice(2);
+const find = (s, l) => {
+  const i = Math.max(args.indexOf(s), args.indexOf(l));
+  return i > -1 ? i : -1;
+};
+
+const help = () => {
+  console.log(`
+📚 google-translate-api-x-lite v${v}
+
+Usage:
+  $0 [command] [options]
+
+Commands:
+  -h, --help              Show this help
+  -v, --version           Show version
+  -l, --list              List all supported languages
+  -d, --detect <text>     Detect language of text
+  -t, --translate <from> <to> <text>  Translate text
+  -i, --info <code>       Show language info
+
+Examples:
+  $0 -d "Hello world"
+  $0 -t auto en "Hola mundo"
+  $0 -t es en "¿Cómo estás?"
+  $0 -l
+  $0 -i es
+  `);
+};
+
+if (find('-h', '--help') > -1 || !args.length) { help(); process.exit(0); }
+if (find('-v', '--version') > -1) { console.log(v); process.exit(0); }
+if (find('-l', '--list') > -1) {
+  langs().forEach(({ code, name }) => console.log(`  ${code.padEnd(5)} ${name}`));
+  process.exit(0);
+}
+
+const dIdx = find('-d', '--detect');
+const tIdx = find('-t', '--translate');
+const iIdx = find('-i', '--info');
 
 (async () => {
-  const t = new T(), d = i('-d', '--detect'), tr = i('-t', '--translate');
   try {
-    if (d > -1) {
-      const txt = args.slice(d + 1).join(' ');
-      if (!txt) throw new Error('Falta el texto a detectar');
-      const r = await t.detect(txt);
-      console.log(`Language: ${r.name} (${r.code})`);
-    } else if (tr > -1) {
-      const f = args[tr + 1] || 'auto', to = args[tr + 2], txt = args.slice(tr + 3).join(' ');
-      if (!to || !txt) throw new Error('Uso: -t <from> <to> "texto"');
-      const r = await t.translate(txt, f, to);
-      console.log(`${r.text}${f === 'auto' ? ` [Detected: ${r.name}]` : ''}`);
+    if (dIdx > -1) {
+      const txt = args.slice(dIdx + 1).join(' ');
+      if (!txt) throw new Error('Text required');
+      const r = await detect(txt);
+      console.log(`✅ ${r.name} (${r.code})`);
+      
+    } else if (tIdx > -1) {
+      const from = args[tIdx + 1] || 'auto';
+      const to = args[tIdx + 2];
+      const txt = args.slice(tIdx + 3).join(' ');
+      if (!to) throw new Error('Target language required');
+      if (!txt) throw new Error('Text required');
+      
+      const r = await translate(txt, from, to);
+      console.log(`✅ ${r.text}`);
+      if (r.from && r.from !== from) console.log(`   [Detected: ${r.name}]`);
+      
+    } else if (iIdx > -1) {
+      const code = args[iIdx + 1];
+      if (!code) throw new Error('Language code required');
+      const r = info(code);
+      if (!r) throw new Error(`Language "${code}" not found`);
+      console.log(`✅ ${r.name} (${code}) → ISO-639-2: ${r.code2}`);
+      
+    } else {
+      console.log('❌ Unknown command. Use -h for help.');
     }
-  } catch (e) { console.error(`❌ ${e.message}`); process.exit(1); }
+  } catch (e) {
+    console.error(`❌ ${e.message}`);
+    process.exit(1);
+  }
 })();

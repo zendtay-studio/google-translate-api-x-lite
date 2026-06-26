@@ -1,12 +1,15 @@
 {
   "name": "google-translate-api-x-lite",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Lightweight Google Translate API wrapper with ISO language mapping. Zero dependencies, uses native fetch.",
   "keywords": [
     "google-translate",
+    "google-translate-api",
+    "google-translate-lite",
+    "google-translate-api-x",
+    "google-translate-api-x-lite",
     "translate",
     "translation",
-    "google-translate-api",
     "language-translation",
     "translator",
     "iso-639",
@@ -16,8 +19,7 @@
     "lightweight",
     "fetch",
     "fastld-js",
-    "nodejs",
-    "javascript"
+    "nodejs"
   ],
   "license": "MIT",
   "author": {
