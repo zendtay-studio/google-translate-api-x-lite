@@ -1,5 +1,3 @@
-const ISO = require('./iso');
-
 const U = 'https://translate.googleapis.com/translate_a/single';
 const H = { 'User-Agent': 'Mozilla/5.0' };
 
@@ -16,8 +14,8 @@ const translate = async (txt, f = 'auto', t) => {
   return {
     text: d[0]?.map(s => s[0] || '').join('') || '',
     code: c,
-    ...(ISO[c] || { name: 'Unknown', code2: c }),
     from: f === 'auto' ? c : f,
+    detect: c,
     to: t
   };
 };
@@ -26,11 +24,7 @@ const detect = async (txt) => {
   if (!txt) throw new Error('Text required');
   const d = await req(txt);
   const c = d?.[8]?.[0]?.[0] || '';
-  return { code: c, ...(ISO[c] || { name: 'Unknown', code2: c }) };
+  return { code: c };
 };
 
-const langs = () => Object.entries(ISO).map(([k, v]) => ({ code: k, ...v }));
-
-const info = (code) => ISO[code] || null;
-
-module.exports = { translate, detect, langs, info, ISO };
+module.exports = { translate, detect };
